@@ -16,9 +16,9 @@ if (
   !authConfig.domain ||
   !authConfig.audience ||
   authConfig.audience === "YOUR_API_IDENTIFIER"
-) {
-  console.log(
-    "Exiting: Please make sure that auth_config.json is in place and populated with valid domain and audience values"
+  ) {
+    console.log(
+      "Exiting: Please make sure that auth_config.json is in place and populated with valid domain and audience values"
   );
 
   process.exit();
@@ -28,6 +28,7 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors({ origin: appOrigin }));
 
+console.log("/////////////////////////////////////////")
 const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true,
