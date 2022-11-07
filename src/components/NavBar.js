@@ -21,11 +21,12 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 
 const NavBar = () => {
+
   const [isOpen, setIsOpen] = useState(false);
   const {
     user,
     isAuthenticated,
-    loginWithRedirect,
+    // loginWithRedirect,
     logout,
   } = useAuth0();
   const toggle = () => setIsOpen(!isOpen);
@@ -73,7 +74,7 @@ const NavBar = () => {
                     id="qsLoginBtn"
                     color="primary"
                     className="btn-margin"
-                    onClick={() => loginWithRedirect()}
+                    href='https://amicustrial.tribeplatform.com/auth/login'
                   >
                     Log in
                   </Button>
@@ -113,11 +114,11 @@ const NavBar = () => {
             {!isAuthenticated && (
               <Nav className="d-md-none" navbar>
                 <NavItem>
-                  <Button
+                <Button
                     id="qsLoginBtn"
                     color="primary"
-                    block
-                    onClick={() => loginWithRedirect({})}
+                    className="btn-margin"
+                    href='https://amicustrial.tribeplatform.com/auth/login'
                   >
                     Log in
                   </Button>
