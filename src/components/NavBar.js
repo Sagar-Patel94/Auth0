@@ -74,7 +74,7 @@ const NavBar = () => {
                     id="qsLoginBtn"
                     color="primary"
                     className="btn-margin"
-                    href='https://amicustrial.tribeplatform.com/auth/login'
+                    href='https://sm_circle.circle.so/getting-started'
                   >
                     Log in
                   </Button>
@@ -118,7 +118,7 @@ const NavBar = () => {
                     id="qsLoginBtn"
                     color="primary"
                     className="btn-margin"
-                    href='https://amicustrial.tribeplatform.com/auth/login'
+                    href='https://sm_circle.circle.so/getting-started'
                   >
                     Log in
                   </Button>
