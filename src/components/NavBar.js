@@ -3,6 +3,14 @@ import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+} from "firebase/auth";
+import { initializeApp } from "firebase/app";
+
+import {
   Collapse,
   Container,
   Navbar,
@@ -20,8 +28,51 @@ import {
 
 import { useAuth0 } from "@auth0/auth0-react";
 
-const NavBar = () => {
+const firebaseConfig = {
+  apiKey: "AIzaSyDK0AzE8gkZrSu8VLviQ_21kzTpkyQuT2s",
+  authDomain: "fireauth02-30164.firebaseapp.com",
+  projectId: "fireauth02-30164",
+  storageBucket: "fireauth02-30164.appspot.com",
+  messagingSenderId: "829230886387",
+  appId: "1:829230886387:web:4cc75f238965f0b846b686",
+  measurementId: "G-1JBED4M42P",
+};
 
+const app = initializeApp(firebaseConfig);
+console.log("------app------", app, "------app------")
+const auth = getAuth(app);
+console.log("------auth------", auth, "------auth------")
+const provider = new GoogleAuthProvider();
+console.log("------provider------", provider, "------provider------")
+
+getRedirectResult(auth)
+  .then((result) => {
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    console.log("------credential------", credential, "------credential------");
+    const token = credential.accessToken;
+    console.log("------token------", token, "------token------");
+    const user = result.user;
+    console.log("------user------", user, "------user------");
+    if (result) {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          window.location = "https://smp.circle.so/oauth2/callback";
+        }
+      });
+    }
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    console.log("------errorCode------", errorCode, "------errorCode------");
+    const errorMessage = error.message;
+    console.log("------errorMessage------", errorMessage, "------errorMessage------");
+    const email = error.customData.email;
+    console.log("------email------", email, "------email------");
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log("------credential------", credential, "------credential------");
+  });
+
+const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const {
     user,
@@ -68,18 +119,48 @@ const NavBar = () => {
               )}
             </Nav>
             <Nav className="d-none d-md-block" navbar>
-              {!isAuthenticated && (
-                <NavItem>
-                  <Button
-                    id="qsLoginBtn"
-                    color="primary"
-                    className="btn-margin"
-                    href='https://sm_circle.circle.so/getting-started'
-                  >
-                    Log in
-                  </Button>
-                </NavItem>
-              )}
+              <div className="row">
+                {!isAuthenticated && (
+                  <NavItem className="mx-4">
+                    <Button
+                      id="qsLoginBtn"
+                      color="primary"
+                      className="btn-margin"
+                      // onClick={() => loginWithRedirect()}
+                      // href='https://jp_circle.circle.so/oauth2/callback'
+                      href="https://dev--53djkkq.us.auth0.com/authorize?client_id=dOY6WEYjUx82GzqQ2ra9lYROIXytWBoW&redirect_uri=http://localhost:3000&response_type=code&scope=openid+profile+email"
+                    >
+                      Continue with Auth0
+                    </Button>
+                  </NavItem>
+                )}
+                {!isAuthenticated && (
+                  <NavItem>
+                    <Button
+                      id="qsLoginBtn"
+                      color="primary"
+                      className="btn-margin"
+                      // href='https://jp_circle.circle.so/home'
+                      href="https://jp_circle.circle.so/oauth2/callback"
+                    >
+                      Continue with Circle
+                    </Button>
+                  </NavItem>
+                )}
+                {!isAuthenticated && (
+                  <NavItem className="mx-4">
+                    <Button
+                      id="qsLoginBtn"
+                      color="primary"
+                      className="btn-margin"
+                      // href='https://jp_circle.circle.so/home'
+                      onClick={() => signInWithRedirect(auth, provider)}
+                    >
+                      Continue with Firebase
+                    </Button>
+                  </NavItem>
+                )}
+              </div>
               {isAuthenticated && (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret id="profileDropDown">
@@ -114,11 +195,11 @@ const NavBar = () => {
             {!isAuthenticated && (
               <Nav className="d-md-none" navbar>
                 <NavItem>
-                <Button
+                  <Button
                     id="qsLoginBtn"
                     color="primary"
                     className="btn-margin"
-                    href='https://sm_circle.circle.so/getting-started'
+                    href="https://dev--53djkkq.us.auth0.com/login?state=hKFo2SBkM3Y4aGRaai1ZN1lmRS1BQ0ZNaWZkOXFoSFJ5ZEpQWqFupWxvZ2luo3RpZNkgYktxd2tUUXVwLUxNVURrbFJXNjVZQ3IwR1VVZERLTE2jY2lk2SBkT1k2V0VZalV4ODJHenFRMnJhOWxZUk9JWHl0V0JvVw&client=dOY6WEYjUx82GzqQ2ra9lYROIXytWBoW&protocol=oauth2&redirect_uri=https://jp_circle.circle.so/oauth2/callback&response_type=code&scope=openid%20profile%20email"
                   >
                     Log in
                   </Button>

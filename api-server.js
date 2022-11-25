@@ -5,6 +5,9 @@ const helmet = require("helmet");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 const authConfig = require("./src/auth_config.json");
+// const firebaseAdmin = require("firebase-admin");
+const path = require("path");
+// const serviceAccount = require("./src/firebase/firebase-key.json");
 
 const app = express();
 
@@ -27,6 +30,7 @@ if (
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors({ origin: appOrigin }));
+app.use("/", express.static(path.join(__dirname, "public")));
 
 const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
@@ -40,6 +44,25 @@ const checkJwt = jwt({
   issuer: `https://${authConfig.domain}/`,
   algorithms: ["RS256"],
 });
+
+// firebaseAdmin.initializeApp({
+//   credential: firebaseAdmin.credential.cert(serviceAccount),
+//   databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
+// });
+
+// app.get('/firebase', checkJwt, async (req, res) => {
+//   const {sub: uid} = req.user;
+
+//   try {
+//     const firebaseToken = await firebaseAdmin.auth().createCustomToken(uid);
+//     res.json({firebaseToken});
+//   } catch (err) {
+//     res.status(500).send({
+//       message: 'Something went wrong acquiring a Firebase token.',
+//       error: err
+//     });
+//   }
+// });
 
 app.get("/api/external", checkJwt, (req, res) => {
   res.send({
