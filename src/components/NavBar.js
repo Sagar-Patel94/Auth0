@@ -6,7 +6,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithRedirect,
-  getRedirectResult,
+  getRedirectResult
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
@@ -29,13 +29,14 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDK0AzE8gkZrSu8VLviQ_21kzTpkyQuT2s",
+  apiKey: "AIzaSyAl4QR84x5x9Y6CB0Vo1QB6mBKcwB9Q1gw",
   authDomain: "fireauth02-30164.firebaseapp.com",
   projectId: "fireauth02-30164",
   storageBucket: "fireauth02-30164.appspot.com",
   messagingSenderId: "829230886387",
   appId: "1:829230886387:web:4cc75f238965f0b846b686",
   measurementId: "G-1JBED4M42P",
+  redirectUrl: "https://pragetx.com"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -47,6 +48,7 @@ console.log("------provider------", provider, "------provider------")
 
 getRedirectResult(auth)
   .then((result) => {
+    console.log("------result------", result, "------result------");
     const credential = GoogleAuthProvider.credentialFromResult(result);
     console.log("------credential------", credential, "------credential------");
     const token = credential.accessToken;
@@ -54,8 +56,10 @@ getRedirectResult(auth)
     const user = result.user;
     console.log("------user------", user, "------user------");
     if (result) {
-      auth.onAuthStateChanged((user) => {
-        if (user) {
+      console.log("------result------", result, "------result------");
+      auth.onAuthStateChanged((userData) => {
+        console.log("------userData------", userData, "------userData------");
+        if (userData) {
           window.location = "https://smp.circle.so/oauth2/callback";
         }
       });
