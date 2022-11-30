@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithRedirect,
-  getRedirectResult
+  getRedirectResult,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
@@ -36,15 +37,15 @@ const firebaseConfig = {
   messagingSenderId: "829230886387",
   appId: "1:829230886387:web:4cc75f238965f0b846b686",
   measurementId: "G-1JBED4M42P",
-  redirectUrl: "https://pragetx.com"
+  redirectUrl: "https://pragetx.com",
 };
 
 const app = initializeApp(firebaseConfig);
-console.log("------app------", app, "------app------")
+console.log("------app------", app, "------app------");
 const auth = getAuth(app);
-console.log("------auth------", auth, "------auth------")
+console.log("------auth------", auth, "------auth------");
 const provider = new GoogleAuthProvider();
-console.log("------provider------", provider, "------provider------")
+console.log("------provider------", provider, "------provider------");
 
 getRedirectResult(auth)
   .then((result) => {
@@ -55,13 +56,24 @@ getRedirectResult(auth)
     console.log("------token------", token, "------token------");
     const user = result.user;
     console.log("------user------", user, "------user------");
+
     if (result) {
       console.log("------result------", result, "------result------");
       auth.onAuthStateChanged((userData) => {
         console.log("------userData------", userData, "------userData------");
-        if (userData) {
-          window.location = "https://smp.circle.so/oauth2/callback";
-        }
+        const users = { Email: "s.m.gajera@hotmail.com", Password: "smp@0123" };
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        axios
+          .post("http://localhost:8080/auth0/createUser", users, { headers })
+          .then((response) => console.log(response))
+          .catch((e) => {
+            console.log("======e.message======", e, "======e.message======");
+          });
+        // if (userData) {
+        //   window.location = "https://smp.circle.so/oauth2/callback";
+        // }
       });
     }
   })
@@ -69,7 +81,11 @@ getRedirectResult(auth)
     const errorCode = error.code;
     console.log("------errorCode------", errorCode, "------errorCode------");
     const errorMessage = error.message;
-    console.log("------errorMessage------", errorMessage, "------errorMessage------");
+    console.log(
+      "------errorMessage------",
+      errorMessage,
+      "------errorMessage------"
+    );
     const email = error.customData.email;
     console.log("------email------", email, "------email------");
     const credential = GoogleAuthProvider.credentialFromError(error);
