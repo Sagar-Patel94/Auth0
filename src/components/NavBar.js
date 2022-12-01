@@ -30,14 +30,13 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAl4QR84x5x9Y6CB0Vo1QB6mBKcwB9Q1gw",
-  authDomain: "fireauth02-30164.firebaseapp.com",
-  projectId: "fireauth02-30164",
-  storageBucket: "fireauth02-30164.appspot.com",
-  messagingSenderId: "829230886387",
-  appId: "1:829230886387:web:4cc75f238965f0b846b686",
-  measurementId: "G-1JBED4M42P",
-  redirectUrl: "https://pragetx.com",
+  apiKey: "AIzaSyDYQecYPZHoszPyU_OE0YHXL6uAtJU3kBk",
+  authDomain: "firesm-ae7c0.firebaseapp.com",
+  projectId: "firesm-ae7c0",
+  storageBucket: "firesm-ae7c0.appspot.com",
+  messagingSenderId: "216544335883",
+  appId: "1:216544335883:web:7f8cdf8bdd88594a53cf0e",
+  measurementId: "G-ZWW2DMQN0L"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -60,20 +59,26 @@ getRedirectResult(auth)
     if (result) {
       console.log("------result------", result, "------result------");
       auth.onAuthStateChanged((userData) => {
-        console.log("------userData------", userData, "------userData------");
-        const users = { Email: "s.m.gajera@hotmail.com", Password: "smp@0123" };
+        console.log(
+          "------userData------",
+          userData.email,
+          "------userData------"
+        );
+        const users = { Email: userData.email, Password: "abcd@0123" };
         const headers = {
           "Content-Type": "application/json",
         };
         axios
           .post("http://localhost:8080/auth0/createUser", users, { headers })
-          .then((response) => console.log(response))
+          .then((response) => {
+            console.log(response);
+            if (response) {
+              window.location = "https://smpatel_shiv.circle.so/oauth2/callback";
+            }
+          })
           .catch((e) => {
             console.log("======e.message======", e, "======e.message======");
           });
-        // if (userData) {
-        //   window.location = "https://smp.circle.so/oauth2/callback";
-        // }
       });
     }
   })
@@ -97,7 +102,7 @@ const NavBar = () => {
   const {
     user,
     isAuthenticated,
-    // loginWithRedirect,
+    loginWithRedirect,
     logout,
   } = useAuth0();
   const toggle = () => setIsOpen(!isOpen);
@@ -146,9 +151,9 @@ const NavBar = () => {
                       id="qsLoginBtn"
                       color="primary"
                       className="btn-margin"
-                      // onClick={() => loginWithRedirect()}
+                      onClick={() => loginWithRedirect()}
                       // href='https://jp_circle.circle.so/oauth2/callback'
-                      href="https://dev--53djkkq.us.auth0.com/authorize?client_id=dOY6WEYjUx82GzqQ2ra9lYROIXytWBoW&redirect_uri=http://localhost:3000&response_type=code&scope=openid+profile+email"
+                      // href="https://dev-ei5838on5pwyadgw.us.auth0.com/authorize?client_id=zkgmffTgLvedjA4cMqPosDIpJLOaU7Am&redirect_uri=http://localhost:3000&response_type=code&scope=openid+profile+email"
                     >
                       Continue with Auth0
                     </Button>
